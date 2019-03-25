@@ -1,0 +1,31 @@
+{
+  "name": "twittbot",
+  "version": "1.0.0",
+  "description": "Twitter Bot, Internet Technologies, Assignment 2",
+  "main": "twitterBot.js",
+  "scripts": {
+    "start": "node twitterBot.js",
+    "continuious-start": "nodemon twitterBot.js",
+    "cache-clean": "npm cache clean --force",
+    "delete-modules": "rm -rf node_modules",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "twitter",
+    "bot",
+    "nodejs",
+    "giphy",
+    "coinmarketcap",
+    "cmc",
+    "twit",
+    "api"
+  ],
+  "author": "Yossi Saadi",
+  "license": "ISC",
+  "dependencies": {
+    "coinmarketcap-api": "^3.0.0",
+    "giphy-api": "^2.0.1",
+    "nodemon": "^1.18.10",
+    "twit": "^2.2.11"
+  }
+}
