@@ -24,6 +24,7 @@
   "license": "ISC",
   "dependencies": {
     "coinmarketcap-api": "^3.0.0",
+    "download-file": "^0.1.5",
     "giphy-api": "^2.0.1",
     "nodemon": "^1.18.10",
     "twit": "^2.2.11"

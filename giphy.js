@@ -1,19 +1,14 @@
 const {GIPHY} = require('./entities.js');
-const {GET_TWEET_INFO_BY_PARAMETER_ENUM, GET_GIF_INFO_BY_PARAMETER_ENUM, SEARCH_TWEET_QUERY_ENUM} = require('./enums.js');
 
-const PARAMS_GIPHY_SEARCH = {
-    tag: 'Sport'
-}
-
-const getGif = async(byParameter) => {
+const getGifUrl = async(byParameter, query) => {
     try {
-        const respone = await GIPHY.random(PARAMS_GIPHY_SEARCH);
-        return await respone[byParameter];
+        const {data} = await GIPHY.random({tag: query});
+        return await data[byParameter];
     } catch (err) {
         return null;
     }
 }
 
 module.exports = {
-    getGif
+    getGifUrl
 }

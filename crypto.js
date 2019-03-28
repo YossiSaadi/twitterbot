@@ -1,8 +1,9 @@
 const {CMC} = require('./entities.js');
+
 const CRYPTO_UPDATE_IMG = {
     path: './img/cryptoPriceUpdate.jpg'
 }
-const {GET_TWEET_INFO_BY_PARAMETER_ENUM, GET_GIF_INFO_BY_PARAMETER_ENUM, SEARCH_TWEET_QUERY_ENUM} = require('./enums.js');
+
 const {uploadImgToTwitter, updateTweetStatus} = require('./twitter.js');
 
 const getCoinData = (coin) => {
@@ -24,15 +25,10 @@ const updateCryptoPrices = async() => {
     topThreeCoins.forEach(({name, price}) => {
         priceUpdateString += (`📈 #${name} 💵: ${price}$\n`);
     });
-    
-    if (!CRYPTO_UPDATE_IMG.uploadedId) {
-        const cryptoImgUpload = await uploadImgToTwitter(CRYPTO_UPDATE_IMG.path);
-        CRYPTO_UPDATE_IMG.uploadedId = cryptoImgUpload;
-    }
 
-    // console.log(CRYPTO_UPDATE_IMG.uploadedId);
+    const cryptoImgUpload = await uploadImgToTwitter(CRYPTO_UPDATE_IMG.path);
     
-    updateTweetStatus(priceUpdateString, CRYPTO_UPDATE_IMG.uploadedId);
+    updateTweetStatus(priceUpdateString, cryptoImgUpload);
 }
 
 module.exports = {

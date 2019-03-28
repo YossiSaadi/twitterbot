@@ -1,11 +1,14 @@
-const {TWITTER} = require('./entities.js');
-
-// const twit = require('twit');
-// const TWITTER = new twit(TWITTER_API_KEYS);
+const {TWITTER, GIPHY} = require('./entities.js');
+const FS = require('fs');
 
 const {ENDPOINT_TWITTER_SEARCH_TWEETS, ENDPOINT_TWITTER_POST_UPDATE_TWEET, ENDPOINT_TWITTER_RETWEET, ENDPOINT_TWITTER_POST_MEDIA} = require('./apiEndpoins.js');
-const FS = require('fs');
-const {GET_TWEET_INFO_BY_PARAMETER_ENUM} = require('./enums.js');
+
+const {GET_TWEET_INFO_BY_PARAMETER_ENUM, GET_GIF_INFO_BY_PARAMETER_ENUM} = require('./enums.js');
+
+const {ERROR_SEARCHING_TWEET, ERROR_RETWEETING, ERROR_TWEETING} = require('./errorsMessages');
+
+const {downloadImg} = require('./downloadImg.js');
+const {getGifUrl} = require('./giphy.js');
 
 const searchOnTwitter = (query) => {
     return {
@@ -24,47 +27,57 @@ const uploadImgToTwitter = async(imgPath) => {
 }
 
 const retweet = async(query) => {
-    const id = await getTweetByParameter(GET_TWEET_INFO_BY_PARAMETER_ENUM['BY_ID'], query);
+    const id = await getTweetByParameter(GET_TWEET_INFO_BY_PARAMETER_ENUM.BY_ID, query);
     if (id) {
         try {
             TWITTER.post(ENDPOINT_TWITTER_RETWEET, {id});
             console.log("RETWEETED!");
         } catch (err) {
-            console.error("ERROR while retweeting tweet!", err.stack);
+            console.error(ERROR_RETWEETING, err.stack);
         }
     } else {
-        console.error("ERROR while searching tweet!");
+        console.error(ERROR_SEARCHING_TWEET);
     }
 }
 
-const updateTweetStatus = async(message, mediaUpload = undefined) => {
+const updateTweetStatus = async(message, mediaUpload = undefined, originalTweet = undefined) => {
     const respone = await TWITTER.post(ENDPOINT_TWITTER_POST_UPDATE_TWEET, {
-        status : `Update Status Bot:\n${message}`,
-        media_ids: mediaUpload
+        status : `${message}`,
+        media_ids: mediaUpload,
+        in_reply_to_status_id: originalTweet
     });
     
     if (respone) {
-        console.log(`New Tweet!\n${message}`);
+        console.log(`New Tweet! \n${message}`);
     } else {
-        console.error("ERROR while updating tweet!")
+        console.error(ERROR_TWEETING);
     }
 }
 
 const getTweetByParameter = async(byParameter, query) => {
     try {
         const {data} = await TWITTER.get(ENDPOINT_TWITTER_SEARCH_TWEETS, searchOnTwitter(query));
+        const {statuses} = await data;
+        const status = await statuses[0];
+        return status[byParameter];
+    } catch (err) {
+        return null;
+    }
+}
+
+const getTweetMainParameters = async(query) => {
+    try {
+        const {data} = await TWITTER.get(ENDPOINT_TWITTER_SEARCH_TWEETS, searchOnTwitter(query));
         
         const {statuses} = await data;
         const status = await statuses[0];
+        
+        const {id_str, user} = await status;
+        const {screen_name} = await user;
 
-        if (byParameter !== GET_TWEET_INFO_BY_PARAMETER_ENUM.BY_TWEET_URL) {
-            return status[byParameter];
-        } else {
-            const {entities} = await status;
-            const {urls} = await entities;
-            const url = await urls[0];
-            
-            console.log(urls);
+        return {
+            id_str,
+            screen_name
         }
     } catch (err) {
         return null;
@@ -72,16 +85,15 @@ const getTweetByParameter = async(byParameter, query) => {
 }
 
 const replyToTweet = async(query) => {
-    const url = await getTweetByParameter(GET_TWEET_INFO_BY_PARAMETER_ENUM['BY_TWEET_URL'], query);
-    if (url) {
-        try {
-            // TWITTER.post(ENDPOINT_TWITTER_RETWEET, {id});
-            console.log("RETWEETED! ", url);
-        } catch (err) {
-            console.error("ERROR while retweeting tweet!", err.stack);
-        }
+    const tweet = await getTweetMainParameters(query);
+    const gifUrl = await getGifUrl(GET_GIF_INFO_BY_PARAMETER_ENUM.BY_URL, query);
+    const gifPath = await downloadImg(gifUrl);
+    const uploadedGifId = await uploadImgToTwitter(gifPath);
+
+    if (tweet) {
+        updateTweetStatus(`@${tweet.screen_name} Awesome!`, uploadedGifId, tweet.id_str);
     } else {
-        console.error("ERROR while searching tweet!");
+        console.error(ERROR_SEARCHING_TWEET);
     }
 }
 
