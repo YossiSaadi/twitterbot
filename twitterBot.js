@@ -4,6 +4,8 @@ const {updateCryptoPrices} = require('./crypto.js');
 const {retweet, updateTweetStatus, replyToTweet} = require('./twitter.js');
 
 const initBot = () => {
+    updateTweetStatus("Starting Bot in Heroku!");
+    
     // updateTweetStatus("The bot is still alive !!");
     setInterval(updateTweetStatus, 43200000, "This Bot is still ALIVE !"); // every 12 hours
 
