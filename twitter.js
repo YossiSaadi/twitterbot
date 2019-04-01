@@ -5,7 +5,7 @@ const {ENDPOINT_TWITTER_SEARCH_TWEETS, ENDPOINT_TWITTER_POST_UPDATE_TWEET, ENDPO
 
 const {GET_TWEET_INFO_BY_PARAMETER_ENUM, GET_GIF_INFO_BY_PARAMETER_ENUM} = require('./enums.js');
 
-const {ERROR_SEARCHING_TWEET, ERROR_RETWEETING, ERROR_TWEETING} = require('./errorsMessages');
+const {ERROR_SEARCHING_TWEET, ERROR_RETWEETING, ERROR_TWEETING} = require('./errorsMessages.js');
 
 const {downloadImg} = require('./downloadImg.js');
 const {getGifUrl} = require('./giphy.js');
