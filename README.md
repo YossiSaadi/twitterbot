@@ -22,18 +22,18 @@ After cloning, type "npm install" to install all dependencies
 Add your Twitter, Giphy & CoinMarketCap API keys to the 'configApiKeys.js' file
 ## Running Instructions
 One of two ways:  
-1. run it locally:  
+1. Run it locally:  
   After installation finished that type "npm start" and the bot would be working according to the intervals  
-2. run it on Heroku  
+2. Run it on Heroku  
   Go to Heroku and upload the files to your account  
     
 Heroku takes the ‘main’ set, and run it continuously.  
 On startup the bot tweets: “Starting Bot in Heroku!”.  
 In the code there's intervals for the features:  
-  Every 1 hour the bot tweets the top 3 cryptocurrency ‘name’ & ‘price’ with related photo  
-  Every 1.5 hours the bot retweets a tweet that contains the hashtag ‘#LiveSport’  
-  Every 2 hours the bot replies to a tweet that contains the hashtag ‘#LiveSport’ with a sports related gif  
-  Every 12 hours the bot tweets “This Bot is stille ALIVE !”  
+  1. Every 1 hour the bot tweets the top 3 cryptocurrency ‘name’ & ‘price’ with related photo  
+  2. Every 1.5 hours the bot retweets a tweet that contains the hashtag ‘#LiveSport’  
+  3. Every 2 hours the bot replies to a tweet that contains the hashtag ‘#LiveSport’ with a sports related gif  
+  4. Every 12 hours the bot tweets “This Bot is stille ALIVE !”  
 
 ## Then GoTO
 https://twitter.com/YOUR_TWITTER_ACCOUNT
